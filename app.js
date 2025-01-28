@@ -135,3 +135,35 @@ function desfazerSorteio() {
 
     alert('O último sorteio foi desfeito.');
 }
+
+// Eventos de teclado
+
+// Adicionar eventos de teclado interação com a Tecla Enter:
+// Adicione um ouvinte de eventos para detectar a tecla Enter e chamar a função adicionarAmigo.
+
+document.getElementById('amigo').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        adicionarAmigo();
+    }
+});
+
+
+// Adicionar Ouvinte de Ctrl + Backspace:
+// Adicione um ouvinte de eventos para detectar Ctrl + Backspace e chamar a função desfazerSorteio com confirmação.
+
+document.addEventListener('keydown', function(event) {
+    // Verifica se a tecla pressionada é Backspace e se a tecla Ctrl está sendo mantida
+    if (event.key === 'Backspace' && event.ctrlKey) {
+        event.preventDefault(); // Evita o comportamento padrão do Backspace
+        
+        // Verifica se há sorteios para desfazer
+        if (sorteados.length > 0) {
+            // Pede confirmação antes de desfazer
+            if (confirm('Tem certeza que deseja desfazer o último sorteio?')) {
+                desfazerSorteio(); // Chama a função para desfazer o sorteio
+            }
+        } else {
+            alert('Não há sorteio para desfazer.');
+        }
+    }
+});
