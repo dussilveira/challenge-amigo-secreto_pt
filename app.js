@@ -9,6 +9,11 @@ let amigos = [];
 // Array que mantém registro dos amigos que já foram sorteados, evitando repetições.
 let sorteados = [];
 
+// Objeto que salva o estado anterior do sorteio para possibilitar desfazer ações.
+let estadoAnterior = {
+    sorteados: [],
+    resultado: ''
+};
 
 // Função para Adicionar Amigo:
 // Criar a função adicionarAmigo para adicionar novos amigos à lista.
@@ -58,4 +63,75 @@ function atualizarLista() {
     });
 }
 
+// Função para Limpar a Lista de Amigos:
+// Criar a função limparLista para limpar a exibição da lista de amigos na interface.
 
+function limparLista() {
+    const lista = document.getElementById('listaAmigos');
+    lista.innerHTML = '';
+}
+
+// Função para Sortear Amigo Secreto:
+// Criar a função sortearAmigo para sortear aleatoriamente um amigo que ainda não foi sorteado.
+// A função deve verificar se há amigos na lista, salvar o estado anterior, sortear um amigo e atualizar a interface.
+
+function sortearAmigo() {
+    if (amigos.length === 0) {
+        alert('A lista de amigos está vazia.');
+        return;
+    }
+
+    if (sorteados.length === amigos.length) {
+        alert('Todos os amigos já foram sorteados.');
+        reiniciarSorteio(); // Reinicia completamente o sorteio
+        alert('O sorteio foi reiniciado. Por favor, realize um novo sorteio.');
+        return;
+    }
+
+    // Salva o estado anterior ao sorteio
+    estadoAnterior.sorteados = [...sorteados];
+    estadoAnterior.resultado = document.getElementById('resultado').innerHTML;
+
+    let indiceSorteado;
+    let amigoSorteado;
+
+    do {
+        indiceSorteado = Math.floor(Math.random() * amigos.length);
+        amigoSorteado = amigos[indiceSorteado];
+    } while (sorteados.includes(amigoSorteado));
+
+    sorteados.push(amigoSorteado);
+
+    const resultado = document.getElementById('resultado');
+    resultado.innerHTML = `O amigo secreto sorteado é: ${amigoSorteado}`;
+}
+
+
+// Função para Reiniciar Sorteio:
+//Criar a função reiniciarSorteio para reiniciar completamente o sorteio, limpando listas e estados.
+
+function reiniciarSorteio() {
+    sorteados = [];
+    amigos = [];
+    estadoAnterior.sorteados = [];
+    estadoAnterior.resultado = '';
+    limparLista();
+    document.getElementById('resultado').innerHTML = '';
+}
+
+
+// Função para Desfazer Sorteio:
+// Criar a função desfazerSorteio para desfazer o último sorteio, restaurando o estado anterior.
+
+function desfazerSorteio() {
+    if (sorteados.length === 0) {
+        alert('Não há sorteio para desfazer.');
+        return;
+    }
+
+    // Restaura o estado anterior do sorteio
+    sorteados = [...estadoAnterior.sorteados];
+    document.getElementById('resultado').innerHTML = estadoAnterior.resultado;
+
+    alert('O último sorteio foi desfeito.');
+}
